@@ -2,13 +2,13 @@ package lista;
 
 import java.util.Arrays;
 
-public class ListArray<T> implements List<T> {
-    private T[] elements;
+public class PositionListArray<E> implements PositionList<E> {
+    private E[] elements;
     private int head, tail, capacity;
 
     @SuppressWarnings("unchecked")
-    public ListArray(int capacity) {
-        this.elements = (T[]) new Object[capacity];
+    public PositionListArray(int capacity) {
+        this.elements = (E[]) new Object[capacity];
         this.head = 0;
         this.tail = 0;
         this.capacity = capacity;
@@ -26,7 +26,7 @@ public class ListArray<T> implements List<T> {
         return (head + r) % capacity;
     }
 
-    private int indexOfElement(T e) {
+    private int indexOfElement(E e) {
         int current = head;
         for (int i = 0; i < size(); i++) {
             if (elements[current].equals(e)) {
@@ -38,7 +38,7 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public boolean isFirst(T e) {
+    public boolean isFirst(E e) {
         if (isEmpty()) {
             return false;
         }
@@ -46,7 +46,7 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public boolean isLast(T e) {
+    public boolean isLast(E e) {
         if (isEmpty()) {
             return false;
         }
@@ -54,23 +54,23 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public T first() {
-        if (isEmpty()){
+    public E first() {
+        if (isEmpty()) {
             throw new EmptyListException("List is empty");
         }
         return elements[head];
     }
 
     @Override
-    public T last() {
-        if (isEmpty()){
+    public E last() {
+        if (isEmpty()) {
             throw new EmptyListException("List is empty");
         }
         return elements[previousIndex(tail)];
     }
 
     @Override
-    public T before(T e) {
+    public E before(E e) {
         int current = nextIndex(head);
         for (int i = 1; i < size(); i++) {
             if (elements[current].equals(e)) {
@@ -82,7 +82,7 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public T after(T e) {
+    public E after(E e) {
         int current = head;
         for (int i = 0; i < size() - 1; i++) {
             if (elements[current].equals(e)) {
@@ -94,22 +94,22 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public void replaceElement(T n, T e) {
+    public void replaceElement(E n, E e) {
         int targetIndex = indexOfElement(e);
         elements[targetIndex] = n;
     }
 
     @Override
-    public void swapElements(T n, T q) {
+    public void swapElements(E n, E q) {
         int targetIndexF = indexOfElement(n);
         int targetIndexS = indexOfElement(q);
-        T temp = elements[targetIndexF];
+        E temp = elements[targetIndexF];
         elements[targetIndexF] = elements[targetIndexS];
         elements[targetIndexS] = temp;
     }
 
     @Override
-    public void insertBefore(int n, T e) {
+    public void insertBefore(int n, E e) {
         if (n == 0) {
             insertFirst(e);
             return;
@@ -123,7 +123,7 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public void insertAfter(int n, T e) {
+    public void insertAfter(int n, E e) {
         if (n == size() - 1) {
             insertLast(e);
             return;
@@ -137,28 +137,28 @@ public class ListArray<T> implements List<T> {
     }
 
     @Override
-    public void insertFirst(T e) {
+    public void insertFirst(E e) {
         verifyIsArrayFull();
         head = previousIndex(head);
         elements[head] = e;
     }
 
     @Override
-    public void insertLast(T e) {
+    public void insertLast(E e) {
         verifyIsArrayFull();
         elements[tail] = e;
         tail = nextIndex(tail);
     }
 
     @Override
-    public T remove(int n) {
+    public E remove(int n) {
         if (isEmpty()) {
             throw new EmptyListException("List is empty");
         }
         if (n < 0 || n >= size()) {
             throw new ArrayIndexOutOfBoundsException("Index: " + n + ", Size: " + size());
         }
-        T removed;
+        E removed;
         // if() e else if() -> O(1); else -> O(n)
         if (n == 0) {
             removed = elements[head];
@@ -193,13 +193,13 @@ public class ListArray<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private T[] createNewArray(int capacity) {
-        return (T[]) new Object[capacity];
+    private E[] createNewArray(int capacity) {
+        return (E[]) new Object[capacity];
     }
 
     private void grow() {
         int newCapacity = capacity * 2;
-        T[] newArray = createNewArray(newCapacity);
+        E[] newArray = createNewArray(newCapacity);
         int tempHead = head;
 
         for (int i = 0; i < size(); i++) {
@@ -213,8 +213,8 @@ public class ListArray<T> implements List<T> {
         elements = newArray;
     }
 
-    private void copyAndInsertAt(int r, T e) {
-        T[] newArray = createNewArray(capacity);
+    private void copyAndInsertAt(int r, E e) {
+        E[] newArray = createNewArray(capacity);
         int tempHead = head;
 
         for (int i = 0; i < r; i++) {
@@ -235,7 +235,7 @@ public class ListArray<T> implements List<T> {
     }
 
     private void copyAndRemoveAt(int r) {
-        T[] newArray = createNewArray(capacity);
+        E[] newArray = createNewArray(capacity);
         int tempHead = head;
 
         for (int i = 0; i < r; i++) {
@@ -257,7 +257,7 @@ public class ListArray<T> implements List<T> {
 
     @Override
     public String toString() {
-        return "VectorArray{" +
+        return "ListArray{" +
                 "elements=" + Arrays.toString(elements) +
                 ", head=" + first() +
                 ", tail=" + last() +

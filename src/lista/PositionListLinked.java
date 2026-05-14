@@ -1,31 +1,32 @@
 package lista;
 
-public class ListLinked<T> implements List<T> {
-    // head e tail -> nós sentinelas
-    private Node<T> head;
-    private Node<T> tail;
+public class PositionListLinked<E> implements PositionList<E> {
+    // Nós sentinelas
+    private final Node<E> head;
+    private final Node<E> tail;
     private int size;
 
-    public ListLinked() {
-        this.head = new Node<>(null);
-        this.tail = new Node<>(null);
+    public PositionListLinked() {
+        this.head = new Node<>(null, null, null);
+        this.tail = new Node<>(head, null, null);
         this.head.next = this.tail;
-        this.tail.prev = this.head;
         this.size = 0;
     }
 
-    private static class Node<T> {
-        private T element;
-        private Node<T> next;
-        private Node<T> prev;
+    private static class Node<E> {
+        private E element;
+        private Node<E> next;
+        private Node<E> prev;
 
-        public Node(T element) {
+        public Node(Node<E> prev, E element, Node<E> next) {
+            this.prev = prev;
             this.element = element;
+            this.next = next;
         }
     }
 
-    private Node<T> findNode(T e) {
-        Node<T> current = head.next;
+    private Node<E> findNode(E e) {
+        Node<E> current = head.next;
         while (current != tail) {
             if (current.element.equals(e)) {
                 return current;
@@ -36,11 +37,11 @@ public class ListLinked<T> implements List<T> {
     }
 
     // Busca baseando-se na proximidade dos extremos do começo e final
-    private Node<T> findNode(int n) {
+    private Node<E> findNode(int n) {
         if (n < 0 || n >= size) {
             throw new IndexOutOfBoundsException("Index: " + n + ", Size: " + size);
         }
-        Node<T> current;
+        Node<E> current;
         if (n < size / 2) {
             current = head.next;
             for (int i = 0; i < n; i++) {
@@ -56,7 +57,7 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public boolean isFirst(T e) {
+    public boolean isFirst(E e) {
         if (isEmpty()) {
             return false;
         }
@@ -64,7 +65,7 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public boolean isLast(T e) {
+    public boolean isLast(E e) {
         if (isEmpty()) {
             return false;
         }
@@ -72,15 +73,15 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public T first() {
+    public Node<E> first() {
         if (isEmpty()) {
             throw new EmptyListException("List is empty");
         }
-        return head.next.element;
+        return head.next;
     }
 
     @Override
-    public T last() {
+    public E last() {
         if (isEmpty()) {
             throw new EmptyListException("List is empty");
         }
@@ -88,8 +89,8 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public T before(T e) {
-        Node<T> node = findNode(e);
+    public E before(E e) {
+        Node<E> node = findNode(e);
         if (node.prev == head) {
             throw new IllegalArgumentException("Element '" + e + "' is the first one, has no before");
         }
@@ -97,8 +98,8 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public T after(T e) {
-        Node<T> node = findNode(e);
+    public E after(E e) {
+        Node<E> node = findNode(e);
         if (node.next == tail) {
             throw new IllegalArgumentException("Element '" + e + "' is the last one, has no after");
         }
@@ -106,24 +107,24 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public void replaceElement(T n, T e) {
-        Node<T> node = findNode(e);
+    public void replaceElement(E n, E e) {
+        Node<E> node = findNode(e);
         node.element = n;
     }
 
     @Override
-    public void swapElements(T n, T q) {
-        Node<T> nodeF = findNode(n);
-        Node<T> nodeS = findNode(q);
-        T temp = nodeF.element;
+    public void swapElements(E n, E q) {
+        Node<E> nodeF = findNode(n);
+        Node<E> nodeS = findNode(q);
+        E temp = nodeF.element;
         nodeF.element = nodeS.element;
         nodeS.element = temp;
     }
 
     @Override
-    public void insertBefore(int n, T e) {
-        Node<T> target = findNode(n);
-        Node<T> newNode = new Node<>(e);
+    public void insertBefore(int n, E e) {
+        Node<E> target = findNode(n);
+        Node<E> newNode = new Node<>(e);
 
         newNode.prev = target.prev;
         newNode.next = target;
@@ -134,9 +135,9 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public void insertAfter(int n, T e) {
-        Node<T> target = findNode(n);
-        Node<T> newNode = new Node<>(e);
+    public void insertAfter(int n, E e) {
+        Node<E> target = findNode(n);
+        Node<E> newNode = new Node<>(e);
 
         newNode.prev = target;
         newNode.next = target.next;
@@ -147,8 +148,8 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public void insertFirst(T e) {
-        Node<T> newNode = new Node<>(e);
+    public void insertFirst(E e) {
+        Node<E> newNode = new Node<>(e);
         newNode.next = head.next;
         newNode.prev = head;
 
@@ -159,8 +160,8 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public void insertLast(T e) {
-        Node<T> newNode = new Node<>(e);
+    public void insertLast(E e) {
+        Node<E> newNode = new Node<>(e);
         newNode.prev = tail.prev;
         newNode.next = tail;
 
@@ -171,12 +172,12 @@ public class ListLinked<T> implements List<T> {
     }
 
     @Override
-    public T remove(int n) {
+    public E remove(int n) {
         if (isEmpty()) {
             throw new EmptyListException("Vector is empty");
         }
-        Node<T> target = findNode(n);
-        T removed = target.element;
+        Node<E> target = findNode(n);
+        E removed = target.element;
 
         target.prev.next = target.next;
         target.next.prev = target.prev;
@@ -208,7 +209,7 @@ public class ListLinked<T> implements List<T> {
 
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        Node<T> current = head.next;
+        Node<E> current = head.next;
 
         while (current != tail) {
             sb.append(current.element);

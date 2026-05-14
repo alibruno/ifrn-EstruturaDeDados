@@ -4,15 +4,15 @@ public class TestList {
 
     public static void main(String[] args) {
         System.out.println("===== TESTANDO LISTA COM ARRAY CIRCULAR =====");
-        testList(new ListArray<>(3));
+        testList(new PositionListArray<>(3));
 
         System.out.println("\n\n=============================================");
 
         System.out.println("===== TESTANDO LISTA DUPLAMENTE LIGADA =====");
-        testList(new ListLinked<>());
+        testList(new PositionListLinked<>());
     }
 
-    private static void testList(List<String> list) {
+    private static void testList(PositionList<String> list) {
         System.out.println("vazio? " + list.isEmpty());
 
         System.out.println("--- insertFirst / insertLast ---");
@@ -64,7 +64,7 @@ public class TestList {
         testExceptions(list);
     }
 
-    private static void testExceptions(List<String> list) {
+    private static void testExceptions(PositionList<String> list) {
         System.out.println("Acesso inválido 1 (remover índice inexistente)");
         try {
             list.remove(50);
