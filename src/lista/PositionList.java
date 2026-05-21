@@ -1,31 +1,33 @@
 package lista;
 
+import java.util.NoSuchElementException;
+
 public interface PositionList<E> {
-    boolean isFirst(Position<E> e);
+    boolean isFirst(Position<E> p);
 
-    boolean isLast(Position<E> e);
+    boolean isLast(Position<E> p);
 
-    Position<E> first();
+    Position<E> first() throws NoSuchElementException;
 
-    Position<E> last();
+    Position<E> last() throws NoSuchElementException;
 
-    Position<E> before(Position<E> e);
+    Position<E> before(Position<E> p) throws IllegalArgumentException;
 
-    Position<E> after(Position<E> e);
+    Position<E> after(Position<E> p) throws IllegalArgumentException;
 
-    void replaceElement(Position<E> n, Position<E> e);
+    Position<E> insertFirst(E e);
 
-    void swapElements(Position<E> n, Position<E> q);
+    Position<E> insertLast(E e);
 
-    void insertBefore(int n, Position<E> e);
+    Position<E> insertAfter(Position<E> p, E e) throws IllegalArgumentException;
 
-    void insertAfter(int n, Position<E> e);
+    Position<E> insertBefore(Position<E> p, E e) throws IllegalArgumentException;
 
-    void insertFirst(Position<E> e);
+    E replaceElement(Position<E> p, E e) throws IllegalArgumentException;
 
-    void insertLast(Position<E> e);
+    void swapElements(Position<E> p1, Position<E> p2) throws IllegalArgumentException;
 
-    Position<E> remove(int n);
+    E remove(Position<E> p) throws IllegalArgumentException;
 
     int size();
 

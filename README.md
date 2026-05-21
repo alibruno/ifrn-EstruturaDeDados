@@ -87,30 +87,24 @@ O TAD Lista modela um sequência de posições armazenando objetos quaisquer;
 
 Ele estabelece uma relação antes/depois entre posições.
 
-Nota: `T` -> Tipo genérico
+### Interfaces: 
 
-- Métodos genéricos
-    - `int size()`;
-    - `boolean isEmpty()`.
-- Métodos de fila:
-    - `boolean isFirst(T e)`;
-    - `boolean isLast(T e)`;
-- Métodos para acessar:
-    - `T first()`;
-    - `T last()`;
-    - `T before(T e)`;
-    - `T after(T e)`.
-- Métodos para atualizar:
-    - `void replaceElement(T n, T e`);
-    - `void swapElements(T n, T q)`;
-    - `void insertBefore(int n, T e)`;
-    - `void insertAfter(int n, T e)`;
-    - `void insertFirst(T e)`;
-    - `void insertLast(T e)`;
-    - `T remove(int n)`.
+#### [List](src/lista/List.java)
+
+#### [Position](src/lista/Position.java)
+
+A interface `Position<E>` atua como uma abstração segura de um nó (`Node`) dentro de uma estrutura encadeada (como uma Lista Duplamente Encadeada).
+
+Em vez de usar um número inteiro (índice) para localizar um elemento, você usa uma "Posição". Essa posição sabe exatamente onde ela está na memória e quem são seus vizinhos, mas ela esconde os ponteiros internos (next e prev) do usuário da classe.
+
+#### [PositionList](src/lista/PositionList.java)
+
+É uma interface que define uma coleção de elementos onde o acesso e a navegação não são feitos por índices (como 0, 1, 2...), mas sim através das instâncias de `Position`.
+
+Permite operações em `O(1)`.
 
 ### Implementações
 
-#### [Array circular](src/lista/ListArray.java)
+#### [Array circular](src/lista/ArrayList.java)
 
-#### [Lista duplamente encadeada](src/lista/ListLinked.java)
+#### [Lista duplamente encadeada](src/lista/LinkedPositionList.java)
