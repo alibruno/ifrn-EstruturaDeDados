@@ -16,6 +16,8 @@
 
 ### 5. [Sequência](#sequência)
 
+### 6. [Iteradores](#iteradores)
+
 ---
 
 ## TAD
@@ -223,3 +225,35 @@ Elementos podem ser acessados por colocação ou posição;
 #### [Lista duplamente encadeada](src/sequencia/LinkedSequence.java)
 
 ---
+
+## Iteradores
+
+JAVA possui uma API específica para coleções de objetos;
+
+- Vector e ArrayList são exemplos de implementações desta API;
+
+Um iterador (iterator) abstrai o processo de percorrer uma coleção de elementos
+
+Métodos do TAD **ObjectIterator**:
+- `object object()`;
+- `boolean hasNext()`;
+- `object nextObject()`;
+- `reset()`;
+
+Extende o conceito de posição adicionando a capacidade de travessia
+
+Implementação com array ou lista ligada
+
+Um iterador é, tipicamente, associado com outra estrutura de dados
+
+Podemos aumentar os TAD Pilha, Fila, Deque, Vetor, Lista e Sequencia com o método
+- `ObjectIterator elements()`
+
+Duas noções de iteradores:
+- **Estático**: congela o conteúdo da estrutura de dados em um dado momento
+- **Dinâmico**: segue as mudanças da estrutura de dados
+
+### Implementações
+
+#### [PositionList](src/lista/PositionList.java)
+#### [LinkedPositionList (Impl de Lista duplamente encadeada - TAD lista)](src/lista/LinkedPositionList.java)

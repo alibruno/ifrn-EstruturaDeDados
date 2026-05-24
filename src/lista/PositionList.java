@@ -2,7 +2,7 @@ package lista;
 
 import java.util.NoSuchElementException;
 
-public interface PositionList<E> {
+public interface PositionList<E> extends Iterable<E> {
     boolean isFirst(Position<E> p);
 
     boolean isLast(Position<E> p);
@@ -32,4 +32,15 @@ public interface PositionList<E> {
     int size();
 
     boolean isEmpty();
+
+    // Como estendemos Iterable, o método iterator() já é exigido implicitamente.
+    // Mas, como estamos em uma Lista Posicional, é uma ótima prática
+    // EXIGIR também o iterador de posições na interface:
+
+    /**
+     * Returns an iterable collection of all positions in the list.
+     *
+     * @return an iterable of positions
+     */
+    Iterable<Position<E>> positions();
 }

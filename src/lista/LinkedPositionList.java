@@ -1,5 +1,6 @@
 package lista;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class LinkedPositionList<E> implements PositionList<E> {
@@ -187,5 +188,71 @@ public class LinkedPositionList<E> implements PositionList<E> {
     @Override
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    // ITERATORS
+
+    /**
+     * Returns an iterator over the elements stored in this list.
+     *
+     * <p>This allows the list to be traversed using the enhanced
+     * {@code for-each} loop.
+     *
+     * @return an iterator over the list elements
+     */
+    @Override
+    public Iterator<E> iterator() {
+        return new ElementIterator(); // Allows: for(E element : lista)
+    }
+
+    @Override
+    public Iterable<Position<E>> positions() {
+        return PositionIterator::new; // Allows: for(Position<E> p : lista.positions())
+    }
+
+    // --- ITERATOR CLASSES ---
+
+    /**
+     * Iterator implementation for traversing the positions of the list.
+     *
+     * <p>The iterator starts at the first position and advances sequentially
+     * through the list until no more positions are available.
+     */
+    private class PositionIterator implements Iterator<Position<E>> {
+        private Position<E> cursor = isEmpty() ? null : first(); // Starts with the first
+
+        @Override
+        public boolean hasNext() {
+            return cursor != null;
+        }
+
+        @Override
+        public Position<E> next() {
+            if (cursor == null) throw new NoSuchElementException();
+            Position<E> current = cursor;
+            cursor = after(cursor); // Advance the cursor
+            return current;
+        }
+    }
+
+
+    /**
+     * Iterator implementation for traversing the elements of the list.
+     *
+     * <p>This iterator internally uses a {@code PositionIterator}
+     * to iterate through the positions and retrieve their elements.
+     */
+    private class ElementIterator implements Iterator<E> {
+        private final Iterator<Position<E>> posIterator = new PositionIterator();
+
+        @Override
+        public boolean hasNext() {
+            return posIterator.hasNext();
+        }
+
+        @Override
+        public E next() {
+            return posIterator.next().getElement();
+        }
     }
 }
