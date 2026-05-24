@@ -18,6 +18,10 @@ public class ArrayList<E> implements List<E> {
         this.size = 0;
     }
 
+    public ArrayList() {
+        this(10);
+    }
+
     // MÉTODOS AUXILIARES
 
     private int physicalIndex(int i) {
