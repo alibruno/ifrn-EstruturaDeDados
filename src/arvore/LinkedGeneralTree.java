@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.lang.Math.max;
+
 public class LinkedGeneralTree<E> implements Tree<E> {
     private Node<E> root;
     private int size;
@@ -106,6 +108,43 @@ public class LinkedGeneralTree<E> implements Tree<E> {
         E replaced = node.getElement();
         node.setElement(e);
         return replaced;
+    }
+
+    public int depth(Position<E> v) throws IllegalArgumentException {
+        return depthRecursive(checkPosition(v));
+    }
+
+    private int depthRecursive(Node<E> v) {
+        if (v == root) {
+            return 0;
+        } else {
+            return 1 + depth(v.getParent());
+        }
+    }
+
+    /**
+     * Returns the total height of the tree.
+     */
+    public int height() {
+        if (isEmpty()) {
+            return 0;
+        }
+        return heightRecursive(root); // Recursion starts directly from the root.
+    }
+
+    public int height(Position<E> v) throws IllegalArgumentException {
+        return heightRecursive(checkPosition(v));
+    }
+
+    private int heightRecursive(Node<E> v) {
+        if (v.childrenNumber() == 0) {
+            return 0;
+        }
+        int h = 0;
+        for (Node<E> child : v.getChildren()) {
+            h = max(h, heightRecursive(child));
+        }
+        return 1 + h;
     }
 
     /**
