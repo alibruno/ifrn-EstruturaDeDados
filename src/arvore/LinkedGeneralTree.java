@@ -13,19 +13,33 @@ public class LinkedGeneralTree<E> implements Tree<E> {
         this.size = 0;
     }
 
-    @Override
-    public int size() {
-        return 0;
+    public LinkedGeneralTree(E e) {
+        addRoot(e);
+        this.size = 0;
+    }
+
+    public void addRoot(E e) {
+        if (!isEmpty()) {
+            throw new IllegalStateException("Root already exists");
+        }
+        this.root = new Node<>(e, null);
+    }
+
+    public void addChild(Position<E> v, E e) {
+        Node<E> node = checkPosition(v);
+        Node<E> newNode = new Node<>(e, node);
+        node.addChild(newNode);
+        this.size++;
     }
 
     @Override
-    public int height() {
-        return 0;
+    public int size() {
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return root == null;
     }
 
     @Override
@@ -40,53 +54,81 @@ public class LinkedGeneralTree<E> implements Tree<E> {
 
     @Override
     public Position<E> root() throws IllegalStateException {
-        return null;
+        if (isEmpty()) {
+            throw new IllegalStateException("Tree is empty");
+        }
+        return root;
     }
 
     @Override
     public Position<E> parent(Position<E> v) throws IllegalArgumentException, IllegalStateException {
-        return null;
+        Node<E> node = checkPosition(v);
+        if (node == root) {
+            throw new IllegalStateException("Root must not have parent");
+        }
+        return node.getParent();
     }
 
     @Override
     public Iterable<Position<E>> children(Position<E> v) throws IllegalArgumentException {
-        return null;
+        Node<E> node = checkPosition(v);
+
+        // Cria uma lista vazia usando a interface pública Position
+        List<Position<E>> snapshot = new ArrayList<>(node.childrenNumber());
+
+        // Copia os ponteiros (Não copia os dados, apenas as referências, então é rápido!)
+        for (Node<E> child : node.getChildren()) {
+            snapshot.add(child);
+        }
+
+        // Retorna a lista, pois List implementa Iterable
+        return snapshot;
     }
 
     @Override
     public boolean isInternal(Position<E> v) throws IllegalArgumentException {
-        return false;
+        return checkPosition(v).childrenNumber() > 0;
     }
 
     @Override
     public boolean isExternal(Position<E> v) throws IllegalArgumentException {
-        return false;
+        return checkPosition(v).childrenNumber() == 0;
     }
 
     @Override
     public boolean isRoot(Position<E> v) throws IllegalArgumentException {
-        return false;
+        return checkPosition(v) == root;
     }
 
     @Override
     public E replace(Position<E> v, E e) throws IllegalArgumentException {
-        return null;
+        Node<E> node = checkPosition(v);
+        E replaced = node.getElement();
+        node.setElement(e);
+        return replaced;
     }
 
-    @Override
-    public boolean hasNext() {
-        return false;
+    /**
+     * @param p the position to be validated
+     * @return the node corresponding to the given position
+     * @throws IllegalArgumentException if the position is invalid
+     */
+    private Node<E> checkPosition(Position<E> p) throws IllegalArgumentException {
+        if (!(p instanceof Node<E> node)) { // Cast de Position para Node
+            throw new IllegalArgumentException("Invalid position.");
+        }
+
+        if (node.parent == node) {
+            throw new IllegalArgumentException("Position doesn't belong to a valid Node.");
+        }
+
+        return node;
     }
 
-    @Override
-    public E next() {
-        return null;
-    }
-
-    private static class Node<E> implements Position<E>{
+    private static class Node<E> implements Position<E> {
         private E element;
         private Node<E> parent;
-        private List<E> children;
+        private List<Node<E>> children;
 
         public Node(E element, Node<E> parent) {
             this.element = element;
@@ -96,6 +138,9 @@ public class LinkedGeneralTree<E> implements Tree<E> {
 
         @Override
         public E getElement() throws IllegalStateException {
+            if (parent == this) {
+                throw new IllegalStateException("This position is no longer valid.");
+            }
             return element;
         }
 
@@ -107,16 +152,20 @@ public class LinkedGeneralTree<E> implements Tree<E> {
             return parent;
         }
 
-        public void setParent(Node<E> parent) {
-            this.parent = parent;
-        }
-
-        public List<E> getChildren() {
+        public Iterable<Node<E>> getChildren() {
             return children;
         }
 
-        public void setChildren(List<E> children) {
-            this.children = children;
+        public void addChild(Node<E> v) {
+            children.add(v);
+        }
+
+        public void removeChild(Node<E> v) {
+            children.remove(v);
+        }
+
+        public int childrenNumber() {
+            return children.size();
         }
     }
 }

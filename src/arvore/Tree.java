@@ -2,18 +2,12 @@ package arvore;
 
 import java.util.Iterator;
 
-public interface Tree<E> extends Iterable<E>, Iterator<E> {
+public interface Tree<E> extends Iterable<E> {
 
-    // ========== MÉTODOS GENÉRICOS ==========
+    // ========== GENERIC METHODS ==========
 
     /** Returns the number of positions stored in the tree. */
     int size();
-
-    /**
-     * Returns the height of the tree.
-     * <p>The height of a tree is the maximum depth of any position.
-     */
-    int height();
 
     /** Checks whether the tree is empty. */
     boolean isEmpty();
@@ -24,7 +18,7 @@ public interface Tree<E> extends Iterable<E>, Iterator<E> {
     /** Returns an iterable collection of all positions in the tree. */
     Iterable<Position<E>> positions();
 
-    // ========== MÉTODOS DE ACESSO ==========
+    // ========== ACCESS METHODS ==========
 
     /** Returns the root position of the tree. */
     Position<E> root() throws IllegalStateException;
@@ -35,7 +29,7 @@ public interface Tree<E> extends Iterable<E>, Iterator<E> {
     /** Returns an iterable collection containing the children of a given position. */
     Iterable<Position<E>> children(Position<E> v) throws IllegalArgumentException;
 
-    // ========== MÉTODOS DE CONSULTA ==========
+    // ========== CONSULTATION METHODS ==========
 
     /**
      * Checks whether a position is internal.
@@ -52,7 +46,7 @@ public interface Tree<E> extends Iterable<E>, Iterator<E> {
     /** Checks whether a position is the root of the tree. */
     boolean isRoot(Position<E> v) throws IllegalArgumentException;
 
-    // ========== MÉTODOS DE ATUALIZAÇÃO ==========
+    // ========== UPDATE METHODS ==========
 
     /** Replaces the element stored at a given position with a new element. */
     E replace(Position<E> v, E e) throws IllegalArgumentException;
