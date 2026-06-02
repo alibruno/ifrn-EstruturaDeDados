@@ -19,6 +19,84 @@ public class LinkedGenericTree<E> implements Tree<E> {
         addRoot(e);
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new ElementIterator();
+    }
+
+    @Override
+    public Iterable<Position<E>> positions() {
+        return preOrderIterable();
+    }
+
+    @Override
+    public Position<E> root() throws IllegalStateException {
+        if (isEmpty()) {
+            throw new IllegalStateException("Tree is empty");
+        }
+        return root;
+    }
+
+    @Override
+    public Position<E> parent(Position<E> v) throws IllegalArgumentException, IllegalStateException {
+        Node<E> node = checkPosition(v);
+        if (node == root) {
+            throw new IllegalStateException("Root must not have parent");
+        }
+        return node.getParent();
+    }
+
+    // O(n)
+
+    @Override
+    public Iterable<Position<E>> children(Position<E> v) throws IllegalArgumentException {
+        Node<E> node = checkPosition(v);
+
+        // Creates an empty list using the public Position interface
+        List<Position<E>> snapshot = new ArrayList<>(node.childrenNumber());
+
+        // It copies the pointers (It doesn't copy the data, only the references)
+        for (Node<E> child : node.getChildren()) {
+            snapshot.add(child);
+        }
+
+        // Returns the list, as List implements Iterable
+        return snapshot;
+    }
+
+    @Override
+    public boolean isInternal(Position<E> v) throws IllegalArgumentException {
+        return checkPosition(v).childrenNumber() > 0;
+    }
+
+    @Override
+    public boolean isExternal(Position<E> v) throws IllegalArgumentException {
+        return checkPosition(v).childrenNumber() == 0;
+    }
+
+    @Override
+    public boolean isRoot(Position<E> v) throws IllegalArgumentException {
+        return checkPosition(v) == root;
+    }
+
+    @Override
+    public E replace(Position<E> v, E e) throws IllegalArgumentException {
+        Node<E> node = checkPosition(v);
+        E replaced = node.getElement();
+        node.setElement(e);
+        return replaced;
+    }
+
     public Position<E> addRoot(E e) {
         if (!isEmpty()) {
             throw new IllegalStateException("Root already exists");
@@ -59,10 +137,7 @@ public class LinkedGenericTree<E> implements Tree<E> {
 
         size--;
         // It helps the Garbage Collector by deleting old data.
-        node.setElement(null);
-        if (node.childrenNumber() == 1) {
-            node.removeChild(node.getChildren().iterator().next());
-        }
+        node.clearChildren();
         // important for validating checkPosition()
         node.setParent(node);
         return removed;
@@ -79,83 +154,6 @@ public class LinkedGenericTree<E> implements Tree<E> {
         } else {
             root = null;
         }
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return root == null;
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return new ElementIterator();
-    }
-
-    @Override
-    public Iterable<Position<E>> positions() {
-        return preOrderIterable();
-    }
-
-    @Override
-    public Position<E> root() throws IllegalStateException {
-        if (isEmpty()) {
-            throw new IllegalStateException("Tree is empty");
-        }
-        return root;
-    }
-
-    @Override
-    public Position<E> parent(Position<E> v) throws IllegalArgumentException, IllegalStateException {
-        Node<E> node = checkPosition(v);
-        if (node == root) {
-            throw new IllegalStateException("Root must not have parent");
-        }
-        return node.getParent();
-    }
-
-    // O(n)
-    @Override
-    public Iterable<Position<E>> children(Position<E> v) throws IllegalArgumentException {
-        Node<E> node = checkPosition(v);
-
-        // Creates an empty list using the public Position interface
-        List<Position<E>> snapshot = new ArrayList<>(node.childrenNumber());
-
-        // It copies the pointers (It doesn't copy the data, only the references)
-        for (Node<E> child : node.getChildren()) {
-            snapshot.add(child);
-        }
-
-        // Returns the list, as List implements Iterable
-        return snapshot;
-    }
-
-    @Override
-    public boolean isInternal(Position<E> v) throws IllegalArgumentException {
-        return checkPosition(v).childrenNumber() > 0;
-    }
-
-    @Override
-    public boolean isExternal(Position<E> v) throws IllegalArgumentException {
-        return checkPosition(v).childrenNumber() == 0;
-    }
-
-    @Override
-    public boolean isRoot(Position<E> v) throws IllegalArgumentException {
-        return checkPosition(v) == root;
-    }
-
-    @Override
-    public E replace(Position<E> v, E e) throws IllegalArgumentException {
-        Node<E> node = checkPosition(v);
-        E replaced = node.getElement();
-        node.setElement(e);
-        return replaced;
     }
 
     public int depth(Position<E> v) throws IllegalArgumentException {
@@ -311,6 +309,10 @@ public class LinkedGenericTree<E> implements Tree<E> {
 
         public void removeChild(Node<E> v) {
             children.remove(v);
+        }
+
+        public void clearChildren() {
+            children.clear();
         }
 
         public int childrenNumber() {
