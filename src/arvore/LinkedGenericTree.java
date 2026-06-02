@@ -3,6 +3,7 @@ package arvore;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 public class LinkedGenericTree<E> implements Tree<E> {
@@ -33,6 +34,51 @@ public class LinkedGenericTree<E> implements Tree<E> {
         node.addChild(newNode);
         this.size++;
         return newNode;
+    }
+
+    public E remove(Position<E> v) {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Empty Tree");
+        }
+        Node<E> node = checkPosition(v);
+        E removed = node.getElement();
+
+        if (node == root) {
+            removeRoot();
+        } else if (node.childrenNumber() == 0) {
+            node.getParent().removeChild(node);
+        } else if (node.childrenNumber() == 1) {
+            Node<E> parent = node.getParent();
+            parent.removeChild(node);
+            Node<E> child = node.getChildren().iterator().next();
+            child.setParent(parent);
+            parent.addChild(child);
+        } else {
+            throw new IllegalStateException("Cannot remove an internal position with more than one child.");
+        }
+
+        size--;
+        // It helps the Garbage Collector by deleting old data.
+        node.setElement(null);
+        if (node.childrenNumber() == 1) {
+            node.removeChild(node.getChildren().iterator().next());
+        }
+        // important for validating checkPosition()
+        node.setParent(node);
+        return removed;
+    }
+
+    private void removeRoot() {
+        if (root.childrenNumber() > 1) {
+            throw new IllegalArgumentException("The root cannot be removed because it has more than one child");
+        } else if (root.childrenNumber() == 1) {
+            Node<E> child = root.getChildren().iterator().next();
+            child.setParent(null);
+            root.setParent(null);
+            root = child;
+        } else {
+            root = null;
+        }
     }
 
     @Override
@@ -77,15 +123,15 @@ public class LinkedGenericTree<E> implements Tree<E> {
     public Iterable<Position<E>> children(Position<E> v) throws IllegalArgumentException {
         Node<E> node = checkPosition(v);
 
-        // Cria uma lista vazia usando a interface pública Position
+        // Creates an empty list using the public Position interface
         List<Position<E>> snapshot = new ArrayList<>(node.childrenNumber());
 
-        // Copia os ponteiros (Não copia os dados, apenas as referências, então é rápido)
+        // It copies the pointers (It doesn't copy the data, only the references)
         for (Node<E> child : node.getChildren()) {
             snapshot.add(child);
         }
 
-        // Retorna a lista, pois List implementa Iterable
+        // Returns the list, as List implements Iterable
         return snapshot;
     }
 
@@ -217,7 +263,7 @@ public class LinkedGenericTree<E> implements Tree<E> {
             throw new IllegalArgumentException("Invalid position.");
         }
 
-        if (node.parent == node) {
+        if (node.getParent() == node) {
             throw new IllegalArgumentException("Position doesn't belong to a valid Node.");
         }
 
@@ -251,6 +297,10 @@ public class LinkedGenericTree<E> implements Tree<E> {
             return parent;
         }
 
+        public void setParent(Node<E> parent) {
+            this.parent = parent;
+        }
+
         public Iterable<Node<E>> getChildren() {
             return children;
         }
@@ -274,7 +324,7 @@ public class LinkedGenericTree<E> implements Tree<E> {
     }
 
     private class ElementIterator implements Iterator<E> {
-        // Usa o positions() que acabamos de criar por baixo dos panos
+        // Use the positions() function
         private final Iterator<Position<E>> posIterator = positions().iterator();
 
         @Override
@@ -284,7 +334,7 @@ public class LinkedGenericTree<E> implements Tree<E> {
 
         @Override
         public E next() {
-            return posIterator.next().getElement(); // Extrai apenas o valor (E) da Position
+            return posIterator.next().getElement(); // Extract only the value (E) from the Position
         }
     }
 
