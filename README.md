@@ -6,6 +6,8 @@
 
 GOODRICH, M. T.; TAMASSIA, R. **Estruturas de dados e algoritmos em Java**. 4.ed. Porto Alegre: Bookman, 2007.
 
+---
+
 ## Sumário
 
 ### 0. [TAD](#tad)
@@ -362,3 +364,7 @@ Podemos, também, definir uma árvore binária recursivamente como:
 ### Interfaces
 
 #### [Árvore Binária](src/arvore/binaria/BinaryTree.java)
+
+### Implementações
+
+#### [Estrutura encadeada](src/arvore/binaria/LinkedBinaryTree.java)
