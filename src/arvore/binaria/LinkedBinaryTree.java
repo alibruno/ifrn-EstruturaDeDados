@@ -5,6 +5,7 @@ import arvore.Position;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class LinkedBinaryTree<E> implements BinaryTree<E> {
     private Node<E> root;
@@ -13,11 +14,6 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
     public LinkedBinaryTree() {
         this.root = null;
         this.size = 0;
-    }
-
-    public LinkedBinaryTree(E e) {
-        this.root = new Node<>(e, null, null, null);
-        this.size = 1;
     }
 
     @Override
@@ -70,12 +66,12 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return new ElementIterator();
     }
 
     @Override
     public Iterable<Position<E>> positions() {
-        return null;
+        return preOrderIterable();
     }
 
     @Override
@@ -134,6 +130,147 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
         return replaced;
     }
 
+    public Position<E> addRoot(E e) {
+        if (!isEmpty()) {
+            throw new IllegalStateException("Root already exists");
+        }
+        this.root = new Node<>(e, null, null, null);
+        this.size = 1;
+        return this.root;
+    }
+
+    public Position<E> addLeft(Position<E> v, E e) throws IllegalArgumentException {
+        Node<E> node = checkPosition(v);
+        if (node.left != null) {
+            throw new IllegalArgumentException("This position already has a child on the left.");
+        }
+        Node<E> newNode = new Node<>(e, node, null, null);
+        node.left = newNode;
+        this.size++;
+        return newNode;
+    }
+
+    public Position<E> addRight(Position<E> v, E e) throws IllegalArgumentException {
+        Node<E> node = checkPosition(v);
+        if (node.right != null) {
+            throw new IllegalArgumentException("This position already has a child on the right.");
+        }
+        Node<E> newNode = new Node<>(e, node, null, null);
+        node.right = newNode;
+        this.size++;
+        return newNode;
+    }
+
+    public int depth(Position<E> v) throws IllegalArgumentException {
+        return depthNode(checkPosition(v));
+    }
+
+    private int depthNode(Node<E> v) {
+        if (v == root) {
+            return 0;
+        } else {
+            return 1 + depth(v.parent);
+        }
+    }
+
+    /**
+     * Returns the total height of the tree.
+     */
+    public int height() {
+        if (isEmpty()) {
+            return 0;
+        }
+        return heightNode(root);
+    }
+
+    public int height(Position<E> v) throws IllegalArgumentException {
+        return heightNode(checkPosition(v));
+    }
+
+    private int heightNode(Node<E> v) {
+        int h = 0;
+        if (v.left != null) h = Math.max(h, 1 + heightNode(v.left));
+        if (v.right != null) h = Math.max(h, 1 + heightNode(v.right));
+        return h;
+    }
+
+    public void preOrder(Position<E> v, Consumer<Position<E>> visitor) {
+        Node<E> node = checkPosition(v);
+        preOrderConsumer(node, visitor);
+    }
+
+    private void preOrderConsumer(Node<E> v, Consumer<Position<E>> visitor) {
+        visitor.accept(v);
+        if (v.left != null) preOrderConsumer(v.left, visitor);
+        if (v.right != null) preOrderConsumer(v.right, visitor);
+    }
+
+    public Iterable<Position<E>> preOrderIterable() {
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            preOrderSubtree((Node<E>) root(), snapshot);
+        }
+        return snapshot;
+    }
+
+    private void preOrderSubtree(Node<E> v, List<Position<E>> snapshot) {
+        snapshot.add(v);
+        if (v.left != null) preOrderSubtree(v.left, snapshot);
+        if (v.right != null) preOrderSubtree(v.right, snapshot);
+    }
+
+    public void postOrder(Position<E> v, Consumer<Position<E>> visitor) {
+        Node<E> node = checkPosition(v);
+        postOrderConsumer(node, visitor);
+    }
+
+    private void postOrderConsumer(Node<E> v, Consumer<Position<E>> visitor) {
+        if (v.left != null) postOrderConsumer(v.left, visitor);
+        if (v.right != null) postOrderConsumer(v.right, visitor);
+        visitor.accept(v);
+    }
+
+    public Iterable<Position<E>> postOrderIterable() {
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            postOrderSubtree((Node<E>) root(), snapshot);
+        }
+        return snapshot;
+    }
+
+    private void postOrderSubtree(Node<E> v, List<Position<E>> snapshot) {
+        if (v.left != null) postOrderSubtree(v.left, snapshot);
+        if (v.right != null) postOrderSubtree(v.right, snapshot);
+        snapshot.add(v);
+    }
+
+    public void inOrder(Position<E> v, Consumer<Position<E>> visitor) {
+        Node<E> node = checkPosition(v);
+        inOrderConsumer(node, visitor);
+    }
+
+    private void inOrderConsumer(Node<E> v, Consumer<Position<E>> visitor) {
+        if (v.left != null) inOrderConsumer(v.left, visitor);
+        visitor.accept(v);
+        if (v.right != null) inOrderConsumer(v.right, visitor);
+    }
+
+
+    public Iterable<Position<E>> inOrderIterable() {
+        List<Position<E>> snapshot = new ArrayList<>();
+        if (!isEmpty()) {
+            inOrderSubtree((Node<E>) root(), snapshot);
+        }
+        return snapshot;
+    }
+
+    private void inOrderSubtree(Node<E> v, List<Position<E>> snapshot) {
+        if (v.left != null) inOrderSubtree(v.left, snapshot);
+        snapshot.add(v);
+        if (v.right != null) inOrderSubtree(v.right, snapshot);
+    }
+
+
     private Node<E> checkPosition(Position<E> v) throws IllegalArgumentException {
         if (!(v instanceof Node<E> node)) { // Cast Position -> Node
             throw new IllegalArgumentException("Not a valid position.");
@@ -164,6 +301,20 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
             if (parent == this) throw new IllegalStateException("Position invalid.");
             return element;
         }
+    }
 
+    private class ElementIterator implements Iterator<E> {
+        // Use the positions() function
+        private final Iterator<Position<E>> posIterator = positions().iterator();
+
+        @Override
+        public boolean hasNext() {
+            return posIterator.hasNext();
+        }
+
+        @Override
+        public E next() {
+            return posIterator.next().getElement(); // Extract only the value (E) from the Position
+        }
     }
 }
