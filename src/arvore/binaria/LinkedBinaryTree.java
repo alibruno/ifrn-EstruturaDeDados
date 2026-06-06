@@ -5,6 +5,7 @@ import arvore.Position;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 public class LinkedBinaryTree<E> implements BinaryTree<E> {
@@ -159,6 +160,52 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
         node.right = newNode;
         this.size++;
         return newNode;
+    }
+
+    public E remove(Position<E> v) {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Empty Tree");
+        }
+
+        Node<E> node = checkPosition(v);
+        if (node.left != null && node.right != null) {
+            throw new IllegalArgumentException("It is impossible to remove a position with two children.");
+        }
+
+        E removed = node.element;
+
+        Node<E> child = (node.left != null) ? node.left : node.right;
+
+        if (node == root) {
+            root = child;
+            if (child != null) {
+                child.parent = null;
+            }
+        }
+        else {
+            Node<E> parent = node.parent;
+
+            if (node == parent.left) {
+                parent.left = child;
+            } else {
+                parent.right = child;
+            }
+
+            if (child != null) {
+                child.parent = parent;
+            }
+        }
+
+        size--;
+
+        // It helps the Garbage Collector by deleting old data.
+        node.element = null;
+        node.left = null;
+        node.right = null;
+        // important for validating checkPosition()
+        node.parent = node;
+
+        return removed;
     }
 
     public int depth(Position<E> v) throws IllegalArgumentException {

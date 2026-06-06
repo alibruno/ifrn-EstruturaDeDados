@@ -15,10 +15,6 @@ public class LinkedGenericTree<E> implements Tree<E> {
         this.size = 0;
     }
 
-    public LinkedGenericTree(E e) {
-        addRoot(e);
-    }
-
     @Override
     public int size() {
         return size;
@@ -92,7 +88,7 @@ public class LinkedGenericTree<E> implements Tree<E> {
     @Override
     public E replace(Position<E> v, E e) throws IllegalArgumentException {
         Node<E> node = checkPosition(v);
-        E replaced = node.getElement();
+        E replaced = node.element;
         node.element = e;
         return replaced;
     }
@@ -119,7 +115,7 @@ public class LinkedGenericTree<E> implements Tree<E> {
             throw new NoSuchElementException("Empty Tree");
         }
         Node<E> node = checkPosition(v);
-        E removed = node.getElement();
+        E removed = node.element;
 
         if (node == root) {
             removeRoot();
@@ -157,10 +153,10 @@ public class LinkedGenericTree<E> implements Tree<E> {
     }
 
     public int depth(Position<E> v) throws IllegalArgumentException {
-        return depthRecursive(checkPosition(v));
+        return depthNode(checkPosition(v));
     }
 
-    private int depthRecursive(Node<E> v) {
+    private int depthNode(Node<E> v) {
         if (v == root) {
             return 0;
         } else {
@@ -175,20 +171,20 @@ public class LinkedGenericTree<E> implements Tree<E> {
         if (isEmpty()) {
             return 0;
         }
-        return heightRecursive(root);
+        return heightNode(root);
     }
 
     public int height(Position<E> v) throws IllegalArgumentException {
-        return heightRecursive(checkPosition(v));
+        return heightNode(checkPosition(v));
     }
 
-    private int heightRecursive(Node<E> v) {
+    private int heightNode(Node<E> v) {
         if (v.childrenNumber() == 0) {
             return 0;
         }
         int h = 0;
         for (Node<E> child : v.getChildren()) {
-            h = Math.max(h, heightRecursive(child));
+            h = Math.max(h, heightNode(child));
         }
         return 1 + h;
     }
