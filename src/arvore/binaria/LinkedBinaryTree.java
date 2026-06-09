@@ -181,8 +181,7 @@ public class LinkedBinaryTree<E> implements BinaryTree<E> {
             if (child != null) {
                 child.parent = null;
             }
-        }
-        else {
+        } else {
             Node<E> parent = node.parent;
 
             if (node == parent.left) {

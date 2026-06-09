@@ -6,27 +6,41 @@ public interface Tree<E> extends Iterable<E> {
 
     // ========== GENERIC METHODS ==========
 
-    /** Returns the number of positions stored in the tree. */
+    /**
+     * Returns the number of positions stored in the tree.
+     */
     int size();
 
-    /** Checks whether the tree is empty. */
+    /**
+     * Checks whether the tree is empty.
+     */
     boolean isEmpty();
 
-    /** Returns an iterator over the elements stored in the tree. */
+    /**
+     * Returns an iterator over the elements stored in the tree.
+     */
     Iterator<E> iterator();
 
-    /** Returns an iterable collection of all positions in the tree. */
+    /**
+     * Returns an iterable collection of all positions in the tree.
+     */
     Iterable<Position<E>> positions();
 
     // ========== ACCESS METHODS ==========
 
-    /** Returns the root position of the tree. */
+    /**
+     * Returns the root position of the tree.
+     */
     Position<E> root() throws IllegalStateException;
 
-    /** Returns the parent of a given position. */
+    /**
+     * Returns the parent of a given position.
+     */
     Position<E> parent(Position<E> v) throws IllegalArgumentException, IllegalStateException;
 
-    /** Returns an iterable collection containing the children of a given position. */
+    /**
+     * Returns an iterable collection containing the children of a given position.
+     */
     Iterable<Position<E>> children(Position<E> v) throws IllegalArgumentException;
 
     // ========== CONSULTATION METHODS ==========
@@ -43,11 +57,15 @@ public interface Tree<E> extends Iterable<E> {
      */
     boolean isExternal(Position<E> v) throws IllegalArgumentException;
 
-    /** Checks whether a position is the root of the tree. */
+    /**
+     * Checks whether a position is the root of the tree.
+     */
     boolean isRoot(Position<E> v) throws IllegalArgumentException;
 
     // ========== UPDATE METHODS ==========
 
-    /** Replaces the element stored at a given position with a new element. */
+    /**
+     * Replaces the element stored at a given position with a new element.
+     */
     E replace(Position<E> v, E e) throws IllegalArgumentException;
 }
