@@ -1,16 +1,16 @@
 package filaprioridade;
 
+import java.util.AbstractList;
+
 public interface PriorityQueue<K, V> {
-    // Main methods
-    void insert(K key, V value);
-
-    V removeMin();
-
-    // Additional methods
-    V min();
-
     int size();
 
     boolean isEmpty();
+
+    Entry<K, V> min();
+
+    Entry<K, V> insert(K key, V value);
+
+    Entry<K, V> removeMin();
 
 }

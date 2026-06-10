@@ -3,42 +3,48 @@ package heap;
 import filaprioridade.Entry;
 import filaprioridade.PriorityQueue;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
-public class ArrayHeap<K, V> implements PriorityQueue<K, V> {
-    private Node<K, V>[] elements;
+public class BinaryArrayHeap<K, V> implements PriorityQueue<K, V> {
+    private Item<K, V>[] elements;
     private int size;
     private int capacity;
     private final Comparator<? super K> comparator;
 
     @SuppressWarnings("unchecked")
-    public ArrayHeap(int capacity, Comparator<? super K> comparator) {
+    public BinaryArrayHeap(int capacity, Comparator<? super K> comparator) {
         if (capacity <= 0) {
             throw new IllegalArgumentException("Capacity must be greater than zero");
         }
-        this.elements = (Node<K, V>[]) new Node[capacity + 1]; // index 0 is empty
+        this.elements = (Item<K, V>[]) new Item[capacity + 1]; // index 0 is empty
         this.capacity = capacity;
         this.size = 0;
         this.comparator = comparator;
     }
 
-    @Override
-    public void insert(K key, V value) {
-        if (size == capacity) {
-            resize();
-        }
-        Node<K, V> kvNode = new Node<>(key, value);
-        elements[++size] = kvNode;
-        upheap(size);
+    public BinaryArrayHeap(Comparator<? super K> comparator) {
+        this(11, comparator);
     }
 
     @Override
-    public V removeMin() {
+    public Entry<K, V> insert(K key, V value) {
+        if (size == capacity) {
+            resize();
+        }
+        Item<K, V> item = new Item<>(key, value);
+        elements[++size] = item;
+        upheap(size);
+        return item;
+    }
+
+    @Override
+    public Entry<K, V> removeMin() {
         if (isEmpty()) {
             throw new IllegalStateException("Heap is empty");
         }
-        // The value of the root is stored
-        V minValue = elements[1].value();
+        // The Entry of the root is stored
+        Entry<K, V> min = elements[1];
         // The last element of the Heap is taken and placed in the root
         elements[1] = elements[size];
 
@@ -50,7 +56,7 @@ public class ArrayHeap<K, V> implements PriorityQueue<K, V> {
             downheap(1);
         }
 
-        return minValue;
+        return min;
     }
 
     private void downheap(int i) {
@@ -84,12 +90,12 @@ public class ArrayHeap<K, V> implements PriorityQueue<K, V> {
     }
 
     @Override
-    public V min() {
+    public Entry<K, V> min() {
         if (isEmpty()) {
             return null;
         }
         // min element -> root value (Min-Heap)
-        return elements[1].value();
+        return elements[1];
     }
 
     @Override
@@ -105,7 +111,7 @@ public class ArrayHeap<K, V> implements PriorityQueue<K, V> {
     @SuppressWarnings("unchecked")
     private void resize() {
         int newCapacity = capacity * 2;
-        Node<K, V>[] newElements = (Node<K, V>[]) new Node[newCapacity + 1];
+        Item<K, V>[] newElements = (Item<K, V>[]) new Item[newCapacity + 1];
 
         for (int i = 1; i <= size; i++) {
             newElements[i] = elements[i];
@@ -131,28 +137,20 @@ public class ArrayHeap<K, V> implements PriorityQueue<K, V> {
     }
 
     private void swap(int i, int j) {
-        Node<K, V> temp = elements[i];
+        Item<K, V> temp = elements[i];
         elements[i] = elements[j];
         elements[j] = temp;
     }
 
-    private static class Node<K, V> implements Entry<K, V> {
-        private final K key;
-        private final V value;
+    private record Item<K, V>(K key, V value) implements Entry<K, V> {
+    }
 
-        public Node(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        @Override
-        public K key() {
-            return key;
-        }
-
-        @Override
-        public V value() {
-            return value;
-        }
+    @Override
+    public String toString() {
+        return "BinaryArrayHeap{" +
+                "elements=" + Arrays.toString(elements) +
+                ", size=" + size +
+                ", capacity=" + capacity +
+                '}';
     }
 }
