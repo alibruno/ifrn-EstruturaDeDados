@@ -1,7 +1,5 @@
 package filaprioridade;
 
-import java.util.AbstractList;
-
 public interface PriorityQueue<K, V> {
     int size();
 

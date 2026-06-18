@@ -28,13 +28,32 @@ public class BinaryArrayHeap<K, V> implements PriorityQueue<K, V> {
     }
 
     @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    @Override
+    public Entry<K, V> min() {
+        if (isEmpty()) {
+            return null;
+        }
+        // min element -> root value (Min-Heap)
+        return elements[1];
+    }
+
+    @Override
     public Entry<K, V> insert(K key, V value) {
         if (size == capacity) {
             resize();
         }
         Item<K, V> item = new Item<>(key, value);
         elements[++size] = item;
-        upheap(size);
+        upHeap(size);
         return item;
     }
 
@@ -53,13 +72,47 @@ public class BinaryArrayHeap<K, V> implements PriorityQueue<K, V> {
 
         // If the heap is not empty, it is sorted by descending the element from the root
         if (size > 0) {
-            downheap(1);
+            downHeap(1);
         }
 
         return min;
     }
 
-    private void downheap(int i) {
+    @SuppressWarnings("unchecked")
+    private void resize() {
+        int newCapacity = capacity * 2;
+        Item<K, V>[] newElements = (Item<K, V>[]) new Item[newCapacity + 1];
+
+        for (int i = 1; i <= size; i++) {
+            newElements[i] = elements[i];
+        }
+
+        this.elements = newElements;
+        this.capacity = newCapacity;
+    }
+
+    private void upHeap(int i) {
+        while (i > 1) {
+            int parent = i / 2;
+            int cmp = comparator.compare(elements[i].key(), elements[parent].key());
+
+            // actualNode < parentNode
+            if (cmp < 0) {
+                swap(i, parent);
+                i = parent; // 'i' must be updated for the next iteration
+            } else {
+                break; // The order of Min-Heap has been restored
+            }
+        }
+    }
+
+    private void swap(int i, int j) {
+        Item<K, V> temp = elements[i];
+        elements[i] = elements[j];
+        elements[j] = temp;
+    }
+
+    private void downHeap(int i) {
         // The loop iterates as long as the current node has at least one child (the one on the left)
         while (2 * i <= size) {
             int smallerChild = getSmallerChild(i);
@@ -89,60 +142,24 @@ public class BinaryArrayHeap<K, V> implements PriorityQueue<K, V> {
         return smallerChild;
     }
 
-    @Override
-    public Entry<K, V> min() {
-        if (isEmpty()) {
-            return null;
-        }
-        // min element -> root value (Min-Heap)
-        return elements[1];
-    }
+    private static class Item<K, V> implements Entry<K, V> {
+        private final K key;
+        private final V value;
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void resize() {
-        int newCapacity = capacity * 2;
-        Item<K, V>[] newElements = (Item<K, V>[]) new Item[newCapacity + 1];
-
-        for (int i = 1; i <= size; i++) {
-            newElements[i] = elements[i];
+        public Item(K key, V value) {
+            this.key = key;
+            this.value = value;
         }
 
-        this.elements = newElements;
-        this.capacity = newCapacity;
-    }
-
-    private void upheap(int i) {
-        while (i > 1) {
-            int parent = i / 2;
-            int cmp = comparator.compare(elements[i].key(), elements[parent].key());
-
-            // actualNode < parentNode
-            if (cmp < 0) {
-                swap(i, parent);
-                i = parent; // 'i' must be updated for the next iteration
-            } else {
-                break; // The order of Min-Heap has been restored
-            }
+        @Override
+        public K key() {
+            return key;
         }
-    }
 
-    private void swap(int i, int j) {
-        Item<K, V> temp = elements[i];
-        elements[i] = elements[j];
-        elements[j] = temp;
-    }
-
-    private record Item<K, V>(K key, V value) implements Entry<K, V> {
+        @Override
+        public V value() {
+            return value;
+        }
     }
 
     @Override

@@ -1,6 +1,4 @@
-package arvore.busca;
-
-import arvore.Position;
+package arvore.binaria;
 
 public class TestBST {
     public static void main(String[] args) {
