@@ -5,9 +5,9 @@ public interface Stack<E> {
 
     boolean isEmpty();
 
-    E top() throws EmptyStackException;
+    E top();
 
     void push(E e);
 
-    E pop() throws EmptyStackException;
+    E pop();
 }

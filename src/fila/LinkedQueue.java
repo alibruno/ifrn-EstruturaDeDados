@@ -77,7 +77,7 @@ public class LinkedQueue<E> implements Queue<E> {
 
     @Override
     public String toString() {
-        return "FilaEncadeada{" +
+        return "LinkedQueue{" +
                 "head=" + head +
                 ", tail=" + tail +
                 ", size=" + size +

@@ -68,7 +68,7 @@ public class ArrayQueue<E> implements Queue<E> {
 
     @Override
     public String toString() {
-        return "FilaArray{" +
+        return "ArrayQueue{" +
                 "elements=" + Arrays.toString(elements) +
                 ", head=" + head +
                 ", tail=" + tail +

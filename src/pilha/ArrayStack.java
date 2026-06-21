@@ -55,10 +55,7 @@ public class ArrayStack<E> implements Stack<E> {
     }
 
     private int calculateNewCapacity() {
-        if (increment == 0)
-            return capacity *= 2;
-        else
-            return capacity += increment;
+        return increment == 0 ? capacity * 2 : capacity + increment;
     }
 
     @Override
