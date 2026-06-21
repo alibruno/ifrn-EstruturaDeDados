@@ -172,8 +172,8 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public String toString() {
-        if (isEmpty()) return "ListArray{empty}";
-        return "ListArray{" +
+        if (isEmpty()) return "ArrayList{empty}";
+        return "ArrayList{" +
                 "elements=" + Arrays.toString(elements) +
                 ", headIndex=" + head +
                 ", first=" + first() +

@@ -39,9 +39,8 @@ public class BinaryArrayHeap<K, V> implements PriorityQueue<K, V> {
     @Override
     public Entry<K, V> min() {
         if (isEmpty()) {
-            return null;
+            throw new IllegalStateException("Heap is empty");
         }
-        // min element -> root value (Min-Heap)
         return elements[1];
     }
 

@@ -164,10 +164,13 @@ public class ArrayVector<E> implements Vector<E> {
 
     @Override
     public String toString() {
+        if (isEmpty()) {
+            return "ArrayVector{empty}";
+        }
         return "ArrayVector{" +
                 "elements=" + Arrays.toString(elements) +
-                ", head=" + elemAtRank(0) +
-                ", tail=" + elemAtRank(size() - 1) +
+                ", first=" + elemAtRank(0) +
+                ", last=" + elemAtRank(size() - 1) +
                 ", size=" + size() +
                 '}';
     }
