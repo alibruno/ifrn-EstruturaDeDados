@@ -1,6 +1,6 @@
 package pilha.rubronegra;
 
-import pilha.PilhaVaziaExcecao;
+import pilha.EmptyStackException;
 
 public class TestPilhaRubroNegra {
     public static void main(String[] args) {
@@ -79,14 +79,14 @@ public class TestPilhaRubroNegra {
         System.out.println("topRed() sem inserção");
         try {
             pilha.topRed();
-        } catch (PilhaVaziaExcecao e) {
+        } catch (EmptyStackException e) {
             System.out.println(e.getMessage());
         }
 
         System.out.println("topBlack() sem inserção");
         try {
             pilha.topBlack();
-        } catch (PilhaVaziaExcecao e) {
+        } catch (EmptyStackException e) {
             System.out.println(e.getMessage());
         }
 
@@ -102,7 +102,7 @@ public class TestPilhaRubroNegra {
         System.out.println("tentativa de topBlack()");
         try {
             pilha.topBlack();
-        } catch (PilhaVaziaExcecao e) {
+        } catch (EmptyStackException e) {
             System.out.println(e.getMessage());
         }
 

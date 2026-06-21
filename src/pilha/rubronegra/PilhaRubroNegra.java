@@ -1,6 +1,6 @@
 package pilha.rubronegra;
 
-import pilha.PilhaVaziaExcecao;
+import pilha.EmptyStackException;
 
 public interface PilhaRubroNegra {
     int sizeAll();
@@ -15,15 +15,15 @@ public interface PilhaRubroNegra {
 
     boolean isEmptyBlack();
 
-    Object topRed() throws PilhaVaziaExcecao;
+    Object topRed() throws EmptyStackException;
 
-    Object topBlack() throws PilhaVaziaExcecao;
+    Object topBlack() throws EmptyStackException;
 
     void pushRed(Object o);
 
     void pushBlack(Object o);
 
-    Object popRed() throws PilhaVaziaExcecao;
+    Object popRed() throws EmptyStackException;
 
-    Object popBlack() throws PilhaVaziaExcecao;
+    Object popBlack() throws EmptyStackException;
 }

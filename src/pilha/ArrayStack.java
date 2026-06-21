@@ -2,37 +2,38 @@ package pilha;
 
 import java.util.Arrays;
 
-public class PilhaArray implements Pilha {
-    private Object[] data;
+public class ArrayStack<E> implements Stack<E> {
+    private E[] data;
     private int index;
     private int capacity;
     private int increment;
 
-    public PilhaArray(int capacity, int increment) {
+    @SuppressWarnings("unchecked")
+    public ArrayStack(int capacity, int increment) {
         this.index = -1;
         this.capacity = capacity;
         this.increment = 0;
         if (increment > 0)
             this.increment = increment;
-        data = new Object[capacity];
+        this.data = (E[]) new Object[capacity];
     }
 
-    public void push(Object o) {
+    public void push(E e) {
         if (index == capacity - 1) {
             increaseCapacity();
         }
-        data[++index] = o;
+        data[++index] = e;
     }
 
-    public Object pop() throws PilhaVaziaExcecao {
+    public E pop() throws EmptyStackException {
         if (isEmpty())
-            throw new PilhaVaziaExcecao("A Pilha está vazia");
+            throw new EmptyStackException("Stack is empty");
         return data[index--];
     }
 
-    public Object top() throws PilhaVaziaExcecao {
+    public E top() throws EmptyStackException {
         if (isEmpty())
-            throw new PilhaVaziaExcecao("A Pilha está vazia");
+            throw new EmptyStackException("Stack is empty");
         return data[index];
     }
 
@@ -44,12 +45,13 @@ public class PilhaArray implements Pilha {
         return index + 1;
     }
 
+    @SuppressWarnings("unchecked")
     private void increaseCapacity() {
         capacity = calculateNewCapacity();
-        Object[] new_data = new Object[capacity];
+        E[] newData = (E[]) new Object[capacity];
         for (int i = 0; i < data.length; i++)
-            new_data[i] = data[i];
-        data = new_data;
+            newData[i] = data[i];
+        data = newData;
     }
 
     private int calculateNewCapacity() {
@@ -61,7 +63,7 @@ public class PilhaArray implements Pilha {
 
     @Override
     public String toString() {
-        return "PilhaArray{" +
+        return "ArrayStack{" +
                 "data=" + Arrays.toString(data) +
                 '}';
     }

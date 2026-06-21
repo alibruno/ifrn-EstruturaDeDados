@@ -1,6 +1,6 @@
 package pilha.rubronegra;
 
-import pilha.PilhaVaziaExcecao;
+import pilha.EmptyStackException;
 
 import java.util.Arrays;
 
@@ -47,9 +47,9 @@ public class PilhaRubroNegraArray implements PilhaRubroNegra {
     // Método para remoção de um objeto da pilha vermelha
     // A remoção ocorre no topo da pilha
     // Esse método pode gerar uma excessão, visto que não é possível remover elementos de uma pilha vazia
-    public Object popRed() throws PilhaVaziaExcecao {
+    public Object popRed() throws EmptyStackException {
         if (isEmptyRed()) {
-            throw new PilhaVaziaExcecao("Red Stack is empty");
+            throw new EmptyStackException("Red Stack is empty");
         }
 
         Object poppedElement = data[redIndex--];
@@ -64,10 +64,10 @@ public class PilhaRubroNegraArray implements PilhaRubroNegra {
     // Método para a remoção de um objeto da pilha preta
     // A remoção ocorre no topo da pilha (da esqueda para a direita)
     // Esse método pode gerar uma excessão, visto que não é possível remover elementos de uma pilha vazia
-    public Object popBlack() throws PilhaVaziaExcecao {
+    public Object popBlack() throws EmptyStackException {
 
         if (isEmptyBlack()) {
-            throw new PilhaVaziaExcecao("Black Stack is empty");
+            throw new EmptyStackException("Black Stack is empty");
         }
 
         Object poppedElement = data[blackIndex++];
@@ -81,9 +81,9 @@ public class PilhaRubroNegraArray implements PilhaRubroNegra {
     @Override
     // Mostra o elemento no topo da pilha VERMELHA
     // Esse método pode gerar uma excessão caso não haja elementos na pilha
-    public Object topRed() throws PilhaVaziaExcecao {
+    public Object topRed() throws EmptyStackException {
         if (isEmptyRed()) {
-            throw new PilhaVaziaExcecao("Red Stack is empty");
+            throw new EmptyStackException("Red Stack is empty");
         }
         return data[redIndex];
     }
@@ -91,9 +91,9 @@ public class PilhaRubroNegraArray implements PilhaRubroNegra {
     @Override
     // Mostra o elemento no topo da pilha PRETA
     // Esse método pode gerar uma excessão caso não haja elementos na pilha
-    public Object topBlack() throws PilhaVaziaExcecao {
+    public Object topBlack() throws EmptyStackException {
         if (isEmptyBlack()) {
-            throw new PilhaVaziaExcecao("Black Stack is empty");
+            throw new EmptyStackException("Black Stack is empty");
         }
         return data[blackIndex];
     }
