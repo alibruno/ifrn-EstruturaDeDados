@@ -1,16 +1,16 @@
 package fila.reverse;
 
-import fila.FilaVaziaException;
+import fila.EmptyQueueException;
 
 import java.util.Arrays;
 
-public class FilaReverseArray implements FilaReverse {
+public class QueueReverseArray implements QueueReverse {
     private Object[] elements;
     private int head, tail, capacity;
     private final int increment;
     private boolean isReversed;
 
-    public FilaReverseArray(int capacity, int increment) {
+    public QueueReverseArray(int capacity, int increment) {
         this.elements = new Object[capacity];
         this.head = 0;
         this.tail = 0;
@@ -45,7 +45,7 @@ public class FilaReverseArray implements FilaReverse {
     @Override
     public Object dequeue() {
         if (isEmpty()) {
-            throw new FilaVaziaException("Queue is empty");
+            throw new EmptyQueueException("Queue is empty");
         }
         Object temp = elements[head];
         head = nextIndex(head);
@@ -72,7 +72,7 @@ public class FilaReverseArray implements FilaReverse {
     @Override
     public Object first() {
         if (isEmpty()) {
-            throw new FilaVaziaException("Queue is empty");
+            throw new EmptyQueueException("Queue is empty");
         }
         return elements[head];
     }
@@ -129,7 +129,7 @@ public class FilaReverseArray implements FilaReverse {
 
     private void reduceCapacity() {
         int minCapacity = 8;
-        int newCapacity = minCapacity > capacity / 2 ? minCapacity : capacity / 2;
+        int newCapacity = Math.max(minCapacity, capacity / 2);
 
         Object[] newArray = new Object[newCapacity];
 

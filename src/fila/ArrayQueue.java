@@ -2,24 +2,26 @@ package fila;
 
 import java.util.Arrays;
 
-public class FilaArray implements Fila {
-    private Object[] elements;
+public class ArrayQueue<E> implements Queue<E> {
+    private E[] elements;
     private int head, tail, capacity;
     private final int increment;
 
-    public FilaArray(int capacity, int increment) {
-        this.elements = new Object[capacity];
+    @SuppressWarnings("unchecked")
+    public ArrayQueue(int capacity, int increment) {
+        this.elements = (E[]) new Object[capacity];
         this.head = 0;
         this.tail = 0;
         this.capacity = capacity; //Tamanho
         this.increment = increment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void enqueue(Object o) {
+    public void enqueue(E e) {
         if (size() == capacity - 1) { // encheu coleguinha
             int newCapacity = increment == 0 ? capacity * 2 : capacity + increment;
-            Object[] newArray = new Object[newCapacity];
+            E[] newArray = (E[]) new Object[newCapacity];
             int tempHead = head;
 
             for (int i = 0; i < size(); i++) {
@@ -32,24 +34,24 @@ public class FilaArray implements Fila {
             capacity = newCapacity;
             elements = newArray;
         }
-        elements[tail] = o;
+        elements[tail] = e;
         tail = (tail + 1) % capacity;
     }
 
     @Override
-    public Object dequeue() {
+    public E dequeue() {
         if (isEmpty()) {
-            throw new FilaVaziaException("Queue is empty");
+            throw new EmptyQueueException("Queue is empty");
         }
-        Object temp = elements[head];
+        E temp = elements[head];
         head = (head + 1) % capacity;
         return temp;
     }
 
     @Override
-    public Object first() {
+    public E first() {
         if (isEmpty()) {
-            throw new FilaVaziaException("Queue is empty");
+            throw new EmptyQueueException("Queue is empty");
         }
         return elements[head];
     }

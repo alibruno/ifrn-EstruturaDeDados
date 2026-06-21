@@ -1,11 +1,11 @@
 package fila;
 
-public class FilaEncadeada implements Fila {
-    private No head;
-    private No tail;
+public class LinkedQueue<E> implements Queue<E> {
+    private Node<E> head;
+    private Node<E> tail;
     private int size;
 
-    public FilaEncadeada() {
+    public LinkedQueue() {
         this.head = null;
         this.tail = null;
         this.size = 0;
@@ -13,11 +13,11 @@ public class FilaEncadeada implements Fila {
 
     // No só poderá ser acessado dentro dessa estrutura
     // No é estático pois não precisa de uma instância da fila para existir.
-    private static class No {
-        private Object element;
-        private No next;
+    private static class Node<E> {
+        private E element;
+        private Node<E> next;
 
-        public No(Object element) {
+        public Node(E element) {
             this.element = element;
             this.next = null;
         }
@@ -30,23 +30,23 @@ public class FilaEncadeada implements Fila {
 
 
     @Override
-    public void enqueue(Object o) {
-        No no = new No(o);
+    public void enqueue(E e) {
+        Node<E> node = new Node<>(e);
         if (head == null) {
-            head = no;
+            head = node;
         } else {
-            tail.next = no;
+            tail.next = node;
         }
-        tail = no;
+        tail = node;
         size++;
     }
 
     @Override
-    public Object dequeue() {
+    public E dequeue() {
         if (head == null) {
-            throw new FilaVaziaException("Queue is empty");
+            throw new EmptyQueueException("Queue is empty");
         }
-        Object temp = head.element;
+        E temp = head.element;
         if (size != 1) {
             head = head.next;
         } else {
@@ -58,9 +58,9 @@ public class FilaEncadeada implements Fila {
     }
 
     @Override
-    public Object first() {
+    public E first() {
         if (head == null) {
-            throw new FilaVaziaException("Queue is empty");
+            throw new EmptyQueueException("Queue is empty");
         }
         return head.element;
     }
@@ -90,10 +90,10 @@ public class FilaEncadeada implements Fila {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        No no = head;
-        while (no != null) {
-            sb.append(no.element).append(',').append(' ');
-            no = no.next;
+        Node<E> node = head;
+        while (node != null) {
+            sb.append(node.element).append(',').append(' ');
+            node = node.next;
         }
         sb.delete(sb.length() - 2, sb.length());
         return sb.toString();
