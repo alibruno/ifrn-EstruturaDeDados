@@ -4,15 +4,15 @@ public class TestVector {
 
     public static void main(String[] args) {
         System.out.println("===== TESTANDO ARRAY CIRCULAR =====");
-        testVector(new VectorArray(3, 2));
+        testVector(new ArrayVector<>(3, 2));
 
         System.out.println("===================================");
 
         System.out.println("===== TESTANDO LISTA LIGADA =====");
-        testVector(new VectorLinked());
+        testVector(new LinkedVector<>());
     }
 
-    private static void testVector(Vector v) {
+    private static void testVector(Vector<String> v) {
         System.out.println("vazio? " + v.isEmpty());
 
         System.out.println("--- insertAtRank ---");
@@ -48,7 +48,7 @@ public class TestVector {
         testExceptions(v);
     }
 
-    private static void testExceptions(Vector v) {
+    private static void testExceptions(Vector<String> v) {
         System.out.println("Acesso inválido 1");
         try {
             v.elemAtRank(50);

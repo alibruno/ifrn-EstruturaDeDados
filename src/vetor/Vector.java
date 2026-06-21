@@ -1,13 +1,13 @@
 package vetor;
 
-public interface Vector {
-    void insertAtRank(int r, Object o);
+public interface Vector<E> {
+    void insertAtRank(int r, E e);
 
-    Object replaceAtRank(int r, Object o);
+    E replaceAtRank(int r, E e);
 
-    Object removeAtRank(int r);
+    E removeAtRank(int r);
 
-    Object elemAtRank(int r);
+    E elemAtRank(int r);
 
     int size();
 
