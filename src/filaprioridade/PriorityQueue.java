@@ -11,4 +11,9 @@ public interface PriorityQueue<K, V> {
 
     Entry<K, V> removeMin();
 
+    interface Entry<K, V> {
+        K key();
+
+        V value();
+    }
 }

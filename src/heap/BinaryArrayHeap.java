@@ -1,6 +1,5 @@
 package heap;
 
-import filaprioridade.Entry;
 import filaprioridade.PriorityQueue;
 
 import java.util.Arrays;
@@ -142,7 +141,7 @@ public class BinaryArrayHeap<K, V> implements PriorityQueue<K, V> {
         return smallerChild;
     }
 
-    private static class Item<K, V> implements Entry<K, V> {
+    private static class Item<K, V> implements PriorityQueue.Entry<K, V> {
         private final K key;
         private final V value;
 
