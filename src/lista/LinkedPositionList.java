@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 public class LinkedPositionList<E> implements PositionList<E> {
 
-    private static class Node<E> implements Position<E> {
+    private static class Node<E> implements PositionList.Position<E> {
         private E element;
         private Node<E> prev;
         private Node<E> next;

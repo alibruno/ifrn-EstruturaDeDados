@@ -1,5 +1,7 @@
 package lista;
 
+import lista.PositionList.Position;
+
 public class TestList {
 
     public static void main(String[] args) {
