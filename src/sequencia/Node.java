@@ -1,37 +1,37 @@
 package sequencia;
 
-public class Node {
-    private Object element;
-    private Node prev;
-    private Node next;
+public class Node<E> {
+    private E element;
+    private Node<E> prev;
+    private Node<E> next;
 
-    public Node(Object element, Node prev, Node next) {
+    public Node(E element, Node<E> prev, Node<E> next) {
         this.element = element;
         this.prev = prev;
         this.next = next;
     }
 
-    public Object getElement() {
+    public E getElement() {
         return element;
     }
 
-    public void setElement(Object element) {
+    public void setElement(E element) {
         this.element = element;
     }
 
-    public Node getPrev() {
+    public Node<E> getPrev() {
         return prev;
     }
 
-    public void setPrev(Node prev) {
+    public void setPrev(Node<E> prev) {
         this.prev = prev;
     }
 
-    public Node getNext() {
+    public Node<E> getNext() {
         return next;
     }
 
-    public void setNext(Node next) {
+    public void setNext(Node<E> next) {
         this.next = next;
     }
 }

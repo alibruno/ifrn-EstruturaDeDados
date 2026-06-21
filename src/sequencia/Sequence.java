@@ -1,45 +1,41 @@
 package sequencia;
 
-public interface Sequence {
-    // Métodos Genéricos
+public interface Sequence<E> {
     int size();
 
     boolean isEmpty();
 
-    // Métodos de Lista (Trabalham diretamente com a classe Node)
-    Node first();
+    Node<E> first();
 
-    Node last();
+    Node<E> last();
 
-    Node before(Node p);
+    Node<E> before(Node<E> p);
 
-    Node after(Node p);
+    Node<E> after(Node<E> p);
 
-    Object replaceElement(Node p, Object e);
+    E replaceElement(Node<E> p, E e);
 
-    void swapElements(Node p, Node q);
+    void swapElements(Node<E> p, Node<E> q);
 
-    Node insertBefore(Node p, Object e);
+    Node<E> insertBefore(Node<E> p, E e);
 
-    Node insertAfter(Node p, Object e);
+    Node<E> insertAfter(Node<E> p, E e);
 
-    Node insertFirst(Object e);
+    Node<E> insertFirst(E e);
 
-    Node insertLast(Object e);
+    Node<E> insertLast(E e);
 
-    Object remove(Node p);
+    E remove(Node<E> p);
 
-    // Métodos de Vetor (Baseados em Rank/Índice)
-    Object elemAtRank(int r);
+    E elemAtRank(int r);
 
-    Object replaceAtRank(int r, Object e);
+    E replaceAtRank(int r, E e);
 
-    void insertAtRank(int r, Object e);
+    void insertAtRank(int r, E e);
 
-    Object removeAtRank(int r);
+    E removeAtRank(int r);
 
-    // Métodos Ponte
-    Node atRank(int r);      // Retorna o Node daquela posição
+    Node<E> atRank(int r);
 
-    int rankOf(Node p);      // Recebe o Node e retorna seu índice
+    int rankOf(Node<E> p);
 }

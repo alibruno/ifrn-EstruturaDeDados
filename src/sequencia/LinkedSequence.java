@@ -1,144 +1,178 @@
 package sequencia;
 
-public class LinkedSequence implements Sequence {
+public class LinkedSequence<E> implements Sequence<E> {
 
-    private Node head;  // Nó sentinela de início
-    private Node tail; // Nó sentinela de fim
+    private Node<E> head;
+    private Node<E> tail;
     private int size;
 
     public LinkedSequence() {
-        head = new Node(null, null, null);
-        tail = new Node(null, head, null);
+        head = new Node<>(null, null, null);
+        tail = new Node<>(null, head, null);
         head.setNext(tail);
         size = 0;
     }
 
-    // MÉTODOS GENÉRICOS
-
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    // MÉTODOS PONTE
-    
-    public Node atRank(int r) {
-        if (r < 0 || r > size) throw new IndexOutOfBoundsException("Invalid rank: " + r);
+    @Override
+    public Node<E> atRank(int r) {
+        if (r < 0 || r >= size) {
+            throw new IndexOutOfBoundsException("Invalid rank: " + r);
+        }
 
-        Node node;
+        Node<E> node;
         if (r <= size() / 2) {
             node = head.getNext();
-            for (int i = 0; i < r; i++) node = node.getNext();
+            for (int i = 0; i < r; i++) {
+                node = node.getNext();
+            }
         } else {
             node = tail.getPrev();
-            for (int i = 0; i < size() - r - 1; i++) node = node.getPrev();
+            for (int i = 0; i < size() - r - 1; i++) {
+                node = node.getPrev();
+            }
         }
         return node;
     }
 
-    public int rankOf(Node p) {
-        if (p == null) throw new IllegalArgumentException("Node cannot be null");
+    @Override
+    public int rankOf(Node<E> p) {
+        if (p == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
 
-        Node current = head.getNext();
+        Node<E> current = head.getNext();
         int r = 0;
         while (current != p && current != tail) {
             current = current.getNext();
             r++;
         }
-        if (current == tail) throw new IllegalArgumentException("Node not found in the sequence");
+        if (current == tail) {
+            throw new IllegalArgumentException("Node not found in the sequence");
+        }
         return r;
     }
 
-    // MÉTODOS DE LISTA (Operam nos Nós)
-    public Node first() {
+    @Override
+    public Node<E> first() {
         return head.getNext();
     }
 
-    public Node last() {
+    @Override
+    public Node<E> last() {
         return tail.getPrev();
     }
 
-    public Node before(Node p) {
+    @Override
+    public Node<E> before(Node<E> p) {
         return p.getPrev();
     }
 
-    public Node after(Node p) {
+    @Override
+    public Node<E> after(Node<E> p) {
         return p.getNext();
     }
 
-    public Node insertBefore(Node p, Object e) {
-        if (p == null) throw new IllegalArgumentException("Node cannot be null");
+    @Override
+    public Node<E> insertBefore(Node<E> p, E e) {
+        if (p == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
 
-        Node novoNode = new Node(e, p.getPrev(), p);
-        p.getPrev().setNext(novoNode);
-        p.setPrev(novoNode);
+        Node<E> newNode = new Node<>(e, p.getPrev(), p);
+        p.getPrev().setNext(newNode);
+        p.setPrev(newNode);
         size++;
-        return novoNode;
+        return newNode;
     }
 
-    public Node insertAfter(Node p, Object e) {
-        if (p == null) throw new IllegalArgumentException("Node cannot be null");
+    @Override
+    public Node<E> insertAfter(Node<E> p, E e) {
+        if (p == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
 
-        Node novoNode = new Node(e, p, p.getNext());
-        p.getNext().setPrev(novoNode);
-        p.setNext(novoNode);
+        Node<E> newNode = new Node<>(e, p, p.getNext());
+        p.getNext().setPrev(newNode);
+        p.setNext(newNode);
         size++;
-        return novoNode;
+        return newNode;
     }
 
-    public Node insertFirst(Object e) {
+    @Override
+    public Node<E> insertFirst(E e) {
         return insertAfter(head, e);
     }
 
-    public Node insertLast(Object e) {
+    @Override
+    public Node<E> insertLast(E e) {
         return insertBefore(tail, e);
     }
 
-    public Object remove(Node p) {
-        if (p == null) throw new IllegalArgumentException("Node cannot be null");
+    @Override
+    public E remove(Node<E> p) {
+        if (p == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
 
-        Node prev = p.getPrev();
-        Node next = p.getNext();
+        Node<E> prev = p.getPrev();
+        Node<E> next = p.getNext();
         prev.setNext(next);
         next.setPrev(prev);
         size--;
 
-        Object element = p.getElement();
+        E element = p.getElement();
         p.setNext(null);
         p.setPrev(null);
         return element;
     }
 
-    public Object replaceElement(Node p, Object e) {
-        if (p == null) throw new IllegalArgumentException("Node cannot be null");
+    @Override
+    public E replaceElement(Node<E> p, E e) {
+        if (p == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
 
-        Object old = p.getElement();
+        E old = p.getElement();
         p.setElement(e);
         return old;
     }
 
-    public void swapElements(Node p, Node q) {
-        if (p == null || q == null) throw new IllegalArgumentException("Node cannot be null");
+    @Override
+    public void swapElements(Node<E> p, Node<E> q) {
+        if (p == null || q == null) {
+            throw new IllegalArgumentException("Node cannot be null");
+        }
 
-        Object temp = p.getElement();
+        E temp = p.getElement();
         p.setElement(q.getElement());
         q.setElement(temp);
     }
 
-    // MÉTODOS DE VETOR (Índices/Ranks)
-
-    public Object elemAtRank(int r) {
+    @Override
+    public E elemAtRank(int r) {
         return atRank(r).getElement();
     }
 
-    public Object replaceAtRank(int r, Object e) {
+    @Override
+    public E replaceAtRank(int r, E e) {
         return replaceElement(atRank(r), e);
     }
 
-    public void insertAtRank(int r, Object e) {
+    @Override
+    public void insertAtRank(int r, E e) {
+        if (r < 0 || r > size) {
+            throw new IndexOutOfBoundsException("Invalid rank: " + r);
+        }
         if (r == size) {
             insertLast(e);
         } else {
@@ -146,7 +180,8 @@ public class LinkedSequence implements Sequence {
         }
     }
 
-    public Object removeAtRank(int r) {
+    @Override
+    public E removeAtRank(int r) {
         return remove(atRank(r));
     }
 }
